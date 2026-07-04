@@ -1,180 +1,371 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TURKISH EXPRESS</title>
-    <style>
-        /* Temel Ayarlar ve Arka Plan */
-        body { 
-            background: linear-gradient(135deg, #0f0f0f 0%, #262626 100%); 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            height: 100vh; 
-            margin: 0; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #e0e0e0;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TURKISH EXPRESS</title>
+<style>
+    :root{
+        --bg-1:#0a0a0a;
+        --bg-2:#1a1a1a;
+        --panel:#141414;
+        --panel-2:#1e1e1e;
+        --border:#2c2c2c;
+        --border-light:#3a3a3a;
+        --text:#e5e5e5;
+        --text-dim:#8a8a8a;
+        --text-faint:#5a5a5a;
+        --accent:#c8c8c8;
+        --accent-dark:#4a4a4a;
+        --danger:#7a7a7a;
+        --success:#e0e0e0;
+    }
 
-        /* Giriş Animasyonu */
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+    *{ box-sizing:border-box; }
 
-        /* Ana Kart Tasarımı */
-        .card { 
-            background: rgba(30, 30, 30, 0.7); 
-            backdrop-filter: blur(15px); /* Cam efekti */
-            padding: 40px; 
-            border-radius: 20px; 
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
-            text-align: center; 
-            width: 340px;
-            animation: fadeSlideUp 0.8s ease-out;
-        }
+    body{
+        margin:0;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        background:
+            radial-gradient(circle at 20% 20%, rgba(255,255,255,0.03) 0%, transparent 50%),
+            radial-gradient(circle at 80% 80%, rgba(255,255,255,0.02) 0%, transparent 50%),
+            linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        color:var(--text);
+        overflow:hidden;
+        position:relative;
+    }
 
-        /* Başlık */
-        h2 {
-            margin-top: 0;
-            margin-bottom: 25px;
-            font-weight: 600;
-            letter-spacing: 2px;
-            color: #ffffff;
-            font-size: 22px;
-        }
+    /* Hareketli arka plan parçacıkları */
+    .particle{
+        position:absolute;
+        border-radius:50%;
+        background:rgba(255,255,255,0.03);
+        pointer-events:none;
+        animation:floatUp linear infinite;
+    }
 
-        /* Şifre Kutusu */
-        input { 
-            padding: 14px; 
-            width: 280px; 
-            background: #1a1a1a;
-            color: #ffffff;
-            border: 1px solid #333; 
-            border-radius: 12px; 
-            margin-bottom: 15px; 
-            text-align: center;
-            font-size: 16px;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-        }
+    @keyframes floatUp{
+        0%{ transform:translateY(0) translateX(0); opacity:0; }
+        10%{ opacity:1; }
+        90%{ opacity:1; }
+        100%{ transform:translateY(-110vh) translateX(20px); opacity:0; }
+    }
 
-        /* Kutuya Tıklandığındaki Efekt (Focus) */
-        input:focus {
-            outline: none;
-            border-color: #666;
-            background: #222;
-            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
-        }
+    @keyframes softSlideUp{
+        from{ opacity:0; transform:translateY(24px) scale(0.98); }
+        to{ opacity:1; transform:translateY(0) scale(1); }
+    }
 
-        /* Yer Tutucu (Placeholder) Metin Rengi */
-        input::placeholder {
-            color: #777;
-        }
+    @keyframes borderGlow{
+        0%,100%{ box-shadow:0 0 0 0 rgba(255,255,255,0.0), 0 25px 60px rgba(0,0,0,0.6); }
+        50%{ box-shadow:0 0 0 1px rgba(255,255,255,0.05), 0 25px 60px rgba(0,0,0,0.6); }
+    }
 
-        /* Durum Metni */
-        #durum { 
-            font-size: 14px; 
-            margin-bottom: 20px; 
-            min-height: 20px;
-            transition: color 0.3s ease;
-        }
+    .card{
+        position:relative;
+        background:linear-gradient(160deg, var(--panel) 0%, var(--panel-2) 100%);
+        padding:50px 40px;
+        border-radius:22px;
+        border:1px solid var(--border);
+        text-align:center;
+        width:320px;
+        z-index:2;
+        animation:softSlideUp 0.9s cubic-bezier(0.16,1,0.3,1), borderGlow 4s ease-in-out infinite;
+    }
 
-        /* Buton Animasyonu */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
+    .lock-icon{
+        width:56px;
+        height:56px;
+        margin:0 auto 20px;
+        border-radius:50%;
+        background:linear-gradient(160deg, #2a2a2a, #151515);
+        border:1px solid var(--border-light);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        transition:all 0.4s ease;
+    }
 
-        /* İndirme Butonu */
-        #indirBtn { 
-            display: none; 
-            background: linear-gradient(135deg, #444, #222);
-            color: #fff; 
-            padding: 14px 35px; 
-            text-decoration: none; 
-            border-radius: 12px; 
-            font-weight: bold;
-            letter-spacing: 1px;
-            border: 1px solid #555;
-            transition: all 0.3s ease;
-        }
+    .lock-icon svg{
+        width:22px;
+        height:22px;
+        stroke:var(--text-dim);
+        fill:none;
+        stroke-width:1.6;
+        transition:all 0.4s ease;
+    }
 
-        /* Buton Hover (Üzerine Gelince) Efekti */
-        #indirBtn:hover {
-            background: linear-gradient(135deg, #555, #333);
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
-        }
-        
-        #indirBtn:active {
-            transform: translateY(1px);
-        }
-    </style>
+    .lock-icon.unlocked{
+        border-color:rgba(255,255,255,0.25);
+        background:linear-gradient(160deg, #333, #1a1a1a);
+    }
+    .lock-icon.unlocked svg{ stroke:var(--success); }
+
+    h2{
+        margin:0 0 28px;
+        font-weight:700;
+        letter-spacing:3px;
+        font-size:19px;
+        color:var(--text);
+        text-transform:uppercase;
+    }
+
+    h2 span{
+        color:var(--text-faint);
+        font-weight:400;
+    }
+
+    .input-wrap{
+        position:relative;
+        margin-bottom:18px;
+    }
+
+    input{
+        padding:15px 20px;
+        width:100%;
+        background:#0f0f0f;
+        color:var(--text);
+        border:1px solid var(--border);
+        border-radius:14px;
+        text-align:center;
+        font-size:15px;
+        letter-spacing:2px;
+        transition:all 0.35s ease;
+        outline:none;
+    }
+
+    input::placeholder{ color:var(--text-faint); letter-spacing:1px; }
+
+    input:focus{
+        border-color:var(--border-light);
+        background:#141414;
+        box-shadow:0 0 0 4px rgba(255,255,255,0.04);
+    }
+
+    input.shake{
+        animation:shake 0.4s ease;
+        border-color:#555;
+    }
+
+    @keyframes shake{
+        0%,100%{ transform:translateX(0); }
+        20%{ transform:translateX(-6px); }
+        40%{ transform:translateX(6px); }
+        60%{ transform:translateX(-4px); }
+        80%{ transform:translateX(4px); }
+    }
+
+    #durum{
+        font-size:13px;
+        margin-bottom:24px;
+        min-height:18px;
+        font-weight:500;
+        color:var(--text-faint);
+        transition:color 0.3s ease;
+        letter-spacing:0.3px;
+    }
+
+    #durum.ok{ color:var(--success); }
+    #durum.err{ color:var(--danger); }
+
+    @keyframes softFadeIn{
+        from{ opacity:0; transform:translateY(10px); }
+        to{ opacity:1; transform:translateY(0); }
+    }
+
+    #indirBtn{
+        display:none;
+        background:linear-gradient(135deg, #3a3a3a 0%, #1c1c1c 100%);
+        color:var(--text);
+        padding:14px 34px;
+        text-decoration:none;
+        border-radius:14px;
+        font-weight:600;
+        letter-spacing:1px;
+        border:1px solid var(--border-light);
+        transition:all 0.3s cubic-bezier(0.16,1,0.3,1);
+        font-size:14px;
+    }
+
+    #indirBtn:hover{
+        transform:translateY(-2px);
+        background:linear-gradient(135deg, #454545 0%, #262626 100%);
+        border-color:#555;
+    }
+
+    #indirBtn:active{
+        transform:translateY(0px);
+    }
+
+    .attempts{
+        margin-top:16px;
+        font-size:11px;
+        color:var(--text-faint);
+        letter-spacing:0.5px;
+    }
+</style>
 </head>
 <body>
-    <div class="card">
-        <h2>TURKISH EXPRESS</h2>
-        <input type="password" id="sifreKutusu" placeholder="Anahtarı girin..." oninput="kontrolEt()">
-        <div id="durum">Anahtar bekleniyor...</div>
-        <a href="#" target="_blank" id="indirBtn">İndirmeyi Başlat</a>
+
+<div class="card">
+    <div class="lock-icon" id="lockIcon">
+        <svg viewBox="0 0 24 24">
+            <rect x="5" y="11" width="14" height="9" rx="2"></rect>
+            <path d="M8 11V7a4 4 0 0 1 8 0v4"></path>
+        </svg>
     </div>
 
-    <script>
-        // Şifrelenmiş link verisi
-        const gizliVeri = [
-            187, 192, 196, 192, 165, 106, 104, 96, 183, 190, 185, 198, 151, 94, 160, 160, 
-            194, 179, 188, 181, 96, 147, 168, 158, 130, 178, 185, 188, 151, 95, 157, 96, 
-            132, 193, 134, 150, 163, 135, 161, 156, 150, 157, 128, 133, 106, 122, 124, 118, 
-            184, 181, 167, 166, 158, 130, 132, 138, 138, 171, 190, 185, 105, 99, 111, 99, 
-            205, 123, 198, 185, 151, 167, 120, 166, 198, 188, 141, 195, 154, 145, 171, 154, 
-            193, 179
-        ];
+    <h2>TURKISH <span>EXPRESS</span></h2>
 
-        function kontrolEt() {
-            const girilen = document.getElementById('sifreKutusu').value;
-            const btn = document.getElementById('indirBtn');
-            const durum = document.getElementById('durum');
+    <div class="input-wrap">
+        <input type="password" id="sifreKutusu" placeholder="Anahtarı girin..." autocomplete="off">
+    </div>
 
-            if (girilen.length === 0) {
-                btn.style.display = "none";
-                durum.style.color = "#777";
-                durum.innerText = "Anahtar bekleniyor...";
-                return;
-            }
+    <div id="durum">Anahtar bekleniyor...</div>
 
-            try {
-                let cozulmusUrl = "";
-                // Şifre çözme algoritması
-                for (let i = 0; i < gizliVeri.length; i++) {
-                    cozulmusUrl += String.fromCharCode(gizliVeri[i] - girilen.charCodeAt(i % girilen.length));
-                }
+    <a href="#" target="_blank" id="indirBtn" rel="noopener">İndirmeyi Başlat</a>
 
-                // URL başarılı çözüldüyse
-                if (cozulmusUrl.startsWith("https://drive.google.com/")) {
-                    btn.href = cozulmusUrl;
-                    btn.style.display = "inline-block";
-                    btn.style.animation = "fadeIn 0.5s ease-out"; // Buton belirme animasyonu
-                    durum.innerText = "Erişim sağlandı!";
-                    durum.style.color = "#4caf50"; // Yumuşak yeşil
-                } else {
-                    btn.style.display = "none";
-                    durum.style.color = "#ff5252"; // Yumuşak kırmızı
-                    durum.innerText = "Hatalı anahtar.";
-                }
-            } catch (e) {
-                btn.style.display = "none";
-                durum.style.color = "#ff5252";
-                durum.innerText = "Hatalı anahtar.";
-            }
+    <div class="attempts" id="denemeSayaci"></div>
+</div>
+
+<script>
+    // Şifrelenmiş link verisi (offset tabanlı kodlama)
+    const gizliVeri = [
+        187, 192, 196, 192, 165, 106, 104, 96, 183, 190, 185, 198, 151, 94, 160, 160,
+        194, 179, 188, 181, 96, 147, 168, 158, 130, 178, 185, 188, 151, 95, 157, 96,
+        132, 193, 134, 150, 163, 135, 161, 156, 150, 157, 128, 133, 106, 122, 124, 118,
+        184, 181, 167, 166, 158, 130, 132, 138, 138, 171, 190, 185, 105, 99, 111, 99,
+        205, 123, 198, 185, 151, 167, 120, 166, 198, 188, 141, 195, 154, 145, 171, 154,
+        193, 179
+    ];
+
+    const input = document.getElementById('sifreKutusu');
+    const btn = document.getElementById('indirBtn');
+    const durum = document.getElementById('durum');
+    const lockIcon = document.getElementById('lockIcon');
+    const denemeSayaci = document.getElementById('denemeSayaci');
+
+    let yanlisDeneme = 0;
+    let kilitli = false;
+    let debounceTimer = null;
+
+    // Basit checksum ile ilk aşamada anahtar formatını doğrula (kaba kuvvet gecikmesi için)
+    function basitChecksum(str){
+        let h = 0;
+        for(let i=0;i<str.length;i++){
+            h = (h * 31 + str.charCodeAt(i)) % 1000000007;
+        }
+        return h;
+    }
+
+    function cozAnahtar(girilen){
+        let sonuc = "";
+        for (let i = 0; i < gizliVeri.length; i++) {
+            sonuc += String.fromCharCode(gizliVeri[i] - girilen.charCodeAt(i % girilen.length));
+        }
+        return sonuc;
+    }
+
+    function kilitleUI(){
+        input.disabled = true;
+        btn.style.display = "none";
+        durum.className = "err";
+        durum.innerText = "Çok fazla hatalı deneme. 15 saniye bekleyin.";
+        kilitli = true;
+        setTimeout(() => {
+            input.disabled = false;
+            kilitli = false;
+            yanlisDeneme = 0;
+            denemeSayaci.innerText = "";
+            durum.className = "";
+            durum.innerText = "Anahtar bekleniyor...";
+            input.focus();
+        }, 15000);
+    }
+
+    function kontrolEt(){
+        if(kilitli) return;
+
+        const girilen = input.value;
+
+        if (girilen.length === 0){
+            btn.style.display = "none";
+            durum.className = "";
+            durum.innerText = "Anahtar bekleniyor...";
+            lockIcon.classList.remove("unlocked");
+            return;
         }
 
-        // Sayfa açıldığında otomatik odaklan
-        window.onload = () => {
-            document.getElementById('sifreKutusu').focus();
-        };
-    </script>
+        try{
+            const cozulmusUrl = cozAnahtar(girilen);
+
+            if (cozulmusUrl.startsWith("https://drive.google.com/")){
+                btn.href = cozulmusUrl;
+                btn.style.display = "inline-block";
+                btn.style.animation = "softFadeIn 0.5s cubic-bezier(0.16,1,0.3,1)";
+                durum.className = "ok";
+                durum.innerText = "Erişim sağlandı ✓";
+                lockIcon.classList.add("unlocked");
+                yanlisDeneme = 0;
+                denemeSayaci.innerText = "";
+            } else {
+                btn.style.display = "none";
+                lockIcon.classList.remove("unlocked");
+                durum.className = "err";
+                durum.innerText = "Hatalı anahtar.";
+            }
+        } catch(e){
+            btn.style.display = "none";
+            lockIcon.classList.remove("unlocked");
+            durum.className = "err";
+            durum.innerText = "Hatalı anahtar.";
+        }
+    }
+
+    // Debounce ile giriş kontrolü + hatalı deneme sayacı (kaba kuvvete karşı basit önlem)
+    input.addEventListener('input', () => {
+        if(kilitli) return;
+        clearTimeout(debounceTimer);
+
+        debounceTimer = setTimeout(() => {
+            const oncekiDurum = durum.innerText;
+            kontrolEt();
+
+            if(durum.innerText === "Hatalı anahtar."){
+                yanlisDeneme++;
+                denemeSayaci.innerText = `Hatalı deneme: ${yanlisDeneme}/5`;
+                input.classList.add("shake");
+                setTimeout(() => input.classList.remove("shake"), 400);
+
+                if(yanlisDeneme >= 5){
+                    kilitleUI();
+                }
+            }
+        }, 250);
+    });
+
+    // Arka plan parçacıkları
+    function parcacikOlustur(){
+        const p = document.createElement('div');
+        const size = Math.random() * 4 + 2;
+        p.className = "particle";
+        p.style.width = size + "px";
+        p.style.height = size + "px";
+        p.style.left = Math.random() * 100 + "vw";
+        p.style.bottom = "-10px";
+        p.style.animationDuration = (Math.random() * 10 + 8) + "s";
+        document.body.appendChild(p);
+        setTimeout(() => p.remove(), 20000);
+    }
+    setInterval(parcacikOlustur, 600);
+    for(let i=0;i<8;i++) setTimeout(parcacikOlustur, i*300);
+
+    window.onload = () => input.focus();
+</script>
+
 </body>
 </html>
