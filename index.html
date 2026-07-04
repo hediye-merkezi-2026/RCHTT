@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TURKISH EXPRESS</title>
+    <style>
+        /* Temel Ayarlar ve Arka Plan */
+        body { 
+            background: linear-gradient(135deg, #0f0f0f 0%, #262626 100%); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+            margin: 0; 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: #e0e0e0;
+        }
+
+        /* Giriş Animasyonu */
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Ana Kart Tasarımı */
+        .card { 
+            background: rgba(30, 30, 30, 0.7); 
+            backdrop-filter: blur(15px); /* Cam efekti */
+            padding: 40px; 
+            border-radius: 20px; 
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.5); 
+            text-align: center; 
+            width: 340px;
+            animation: fadeSlideUp 0.8s ease-out;
+        }
+
+        /* Başlık */
+        h2 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            font-weight: 600;
+            letter-spacing: 2px;
+            color: #ffffff;
+            font-size: 22px;
+        }
+
+        /* Şifre Kutusu */
+        input { 
+            padding: 14px; 
+            width: 280px; 
+            background: #1a1a1a;
+            color: #ffffff;
+            border: 1px solid #333; 
+            border-radius: 12px; 
+            margin-bottom: 15px; 
+            text-align: center;
+            font-size: 16px;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+
+        /* Kutuya Tıklandığındaki Efekt (Focus) */
+        input:focus {
+            outline: none;
+            border-color: #666;
+            background: #222;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+        }
+
+        /* Yer Tutucu (Placeholder) Metin Rengi */
+        input::placeholder {
+            color: #777;
+        }
+
+        /* Durum Metni */
+        #durum { 
+            font-size: 14px; 
+            margin-bottom: 20px; 
+            min-height: 20px;
+            transition: color 0.3s ease;
+        }
+
+        /* Buton Animasyonu */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* İndirme Butonu */
+        #indirBtn { 
+            display: none; 
+            background: linear-gradient(135deg, #444, #222);
+            color: #fff; 
+            padding: 14px 35px; 
+            text-decoration: none; 
+            border-radius: 12px; 
+            font-weight: bold;
+            letter-spacing: 1px;
+            border: 1px solid #555;
+            transition: all 0.3s ease;
+        }
+
+        /* Buton Hover (Üzerine Gelince) Efekti */
+        #indirBtn:hover {
+            background: linear-gradient(135deg, #555, #333);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+        }
+        
+        #indirBtn:active {
+            transform: translateY(1px);
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h2>TURKISH EXPRESS</h2>
+        <input type="password" id="sifreKutusu" placeholder="Anahtarı girin..." oninput="kontrolEt()">
+        <div id="durum">Anahtar bekleniyor...</div>
+        <a href="#" target="_blank" id="indirBtn">İndirmeyi Başlat</a>
+    </div>
+
+    <script>
+        // Şifrelenmiş link verisi
+        const gizliVeri = [
+            187, 192, 196, 192, 165, 106, 104, 96, 183, 190, 185, 198, 151, 94, 160, 160, 
+            194, 179, 188, 181, 96, 147, 168, 158, 130, 178, 185, 188, 151, 95, 157, 96, 
+            132, 193, 134, 150, 163, 135, 161, 156, 150, 157, 128, 133, 106, 122, 124, 118, 
+            184, 181, 167, 166, 158, 130, 132, 138, 138, 171, 190, 185, 105, 99, 111, 99, 
+            205, 123, 198, 185, 151, 167, 120, 166, 198, 188, 141, 195, 154, 145, 171, 154, 
+            193, 179
+        ];
+
+        function kontrolEt() {
+            const girilen = document.getElementById('sifreKutusu').value;
+            const btn = document.getElementById('indirBtn');
+            const durum = document.getElementById('durum');
+
+            if (girilen.length === 0) {
+                btn.style.display = "none";
+                durum.style.color = "#777";
+                durum.innerText = "Anahtar bekleniyor...";
+                return;
+            }
+
+            try {
+                let cozulmusUrl = "";
+                // Şifre çözme algoritması
+                for (let i = 0; i < gizliVeri.length; i++) {
+                    cozulmusUrl += String.fromCharCode(gizliVeri[i] - girilen.charCodeAt(i % girilen.length));
+                }
+
+                // URL başarılı çözüldüyse
+                if (cozulmusUrl.startsWith("https://drive.google.com/")) {
+                    btn.href = cozulmusUrl;
+                    btn.style.display = "inline-block";
+                    btn.style.animation = "fadeIn 0.5s ease-out"; // Buton belirme animasyonu
+                    durum.innerText = "Erişim sağlandı!";
+                    durum.style.color = "#4caf50"; // Yumuşak yeşil
+                } else {
+                    btn.style.display = "none";
+                    durum.style.color = "#ff5252"; // Yumuşak kırmızı
+                    durum.innerText = "Hatalı anahtar.";
+                }
+            } catch (e) {
+                btn.style.display = "none";
+                durum.style.color = "#ff5252";
+                durum.innerText = "Hatalı anahtar.";
+            }
+        }
+
+        // Sayfa açıldığında otomatik odaklan
+        window.onload = () => {
+            document.getElementById('sifreKutusu').focus();
+        };
+    </script>
+</body>
+</html>
