@@ -29,14 +29,58 @@
         display:flex;
         justify-content:center;
         align-items:center;
-        background:
-            radial-gradient(circle at 20% 20%, rgba(255,255,255,0.03) 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, rgba(255,255,255,0.02) 0%, transparent 50%),
-            linear-gradient(135deg, var(--bg-1) 0%, var(--bg-2) 100%);
+        background-color:var(--bg-1);
+        background-image:
+            linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+        background-size:42px 42px;
         font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color:var(--text);
         overflow:hidden;
         position:relative;
+    }
+
+    /* Yumuşak, hafif hareketli ışık lekeleri */
+    .blob{
+        position:absolute;
+        border-radius:50%;
+        filter:blur(60px);
+        opacity:0.35;
+        pointer-events:none;
+        z-index:0;
+    }
+
+    .blob-1{
+        width:420px; height:420px;
+        top:-120px; left:-100px;
+        background:radial-gradient(circle, rgba(255,255,255,0.08), transparent 70%);
+        animation:driftA 16s ease-in-out infinite;
+    }
+
+    .blob-2{
+        width:380px; height:380px;
+        bottom:-140px; right:-100px;
+        background:radial-gradient(circle, rgba(255,255,255,0.06), transparent 70%);
+        animation:driftB 20s ease-in-out infinite;
+    }
+
+    @keyframes driftA{
+        0%,100%{ transform:translate(0,0); }
+        50%{ transform:translate(40px, 30px); }
+    }
+
+    @keyframes driftB{
+        0%,100%{ transform:translate(0,0); }
+        50%{ transform:translate(-30px, -40px); }
+    }
+
+    /* Kenarlara doğru koyulaşan vinyet */
+    .vignette{
+        position:absolute;
+        top:0; left:0; right:0; bottom:0;
+        background:radial-gradient(circle at center, transparent 40%, rgba(0,0,0,0.55) 100%);
+        pointer-events:none;
+        z-index:0;
     }
 
     /* Hareketli arka plan parçacıkları */
@@ -207,9 +251,77 @@
         color:var(--text-faint);
         letter-spacing:0.5px;
     }
+
+    /* Üst durum rozeti */
+    .badge{
+        position:relative;
+        z-index:2;
+        display:flex;
+        align-items:center;
+        gap:8px;
+        background:rgba(255,255,255,0.03);
+        border:1px solid var(--border);
+        border-radius:20px;
+        padding:6px 14px;
+        margin-bottom:18px;
+        font-size:11px;
+        letter-spacing:0.8px;
+        color:var(--text-dim);
+        text-transform:uppercase;
+    }
+
+    .badge .dot{
+        width:6px;
+        height:6px;
+        border-radius:50%;
+        background:var(--text-dim);
+        box-shadow:0 0 6px rgba(255,255,255,0.4);
+        animation:pulseDot 2s ease-in-out infinite;
+    }
+
+    @keyframes pulseDot{
+        0%,100%{ opacity:0.5; transform:scale(0.9); }
+        50%{ opacity:1; transform:scale(1.1); }
+    }
+
+    .card:hover{
+        transform:translateY(-2px);
+    }
+
+    .card{
+        transition:transform 0.4s cubic-bezier(0.16,1,0.3,1);
+    }
+
+    /* İnce ayırıcı çizgi */
+    .divider{
+        height:1px;
+        background:linear-gradient(90deg, transparent, var(--border-light), transparent);
+        margin:0 0 24px;
+    }
+
+    /* Alt köşe imzası */
+    .watermark{
+        position:fixed;
+        bottom:16px;
+        right:20px;
+        font-size:11px;
+        color:var(--text-faint);
+        letter-spacing:0.5px;
+        z-index:2;
+        opacity:0.7;
+    }
+
+    .watermark .sep{
+        margin:0 6px;
+        opacity:0.5;
+    }
 </style>
 </head>
 <body>
+
+<div class="blob blob-1"></div>
+<div class="blob blob-2"></div>
+<div class="vignette"></div>
 
 <div class="card">
     <div class="lock-icon" id="lockIcon">
@@ -220,6 +332,10 @@
     </div>
 
     <h2>TURKISH <span>EXPRESS</span></h2>
+
+    <div class="badge"><span class="dot"></span>Şifreli Bağlantı</div>
+
+    <div class="divider"></div>
 
     <div class="input-wrap">
         <input type="password" id="sifreKutusu" placeholder="Anahtarı girin..." autocomplete="off">
@@ -232,15 +348,17 @@
     <div class="attempts" id="denemeSayaci"></div>
 </div>
 
+<div class="watermark">TURKISH EXPRESS<span class="sep">·</span>v1.0</div>
+
 <script>
     // Şifrelenmiş link verisi (offset tabanlı kodlama)
     const gizliVeri = [
-        187, 192, 196, 192, 165, 106, 104, 96, 183, 190, 185, 198, 151, 94, 160, 160,
-        194, 179, 188, 181, 96, 147, 168, 158, 130, 178, 185, 188, 151, 95, 157, 96,
-        132, 193, 134, 150, 163, 135, 161, 156, 150, 157, 128, 133, 106, 122, 124, 118,
-        184, 181, 167, 166, 158, 130, 132, 138, 138, 171, 190, 185, 105, 99, 111, 99,
-        205, 123, 198, 185, 151, 167, 120, 166, 198, 188, 141, 195, 154, 145, 171, 154,
-        193, 179
+        178, 189, 194, 180, 184, 146, 97, 95, 150, 168, 179, 191, 179, 114, 172, 199,
+        161, 151, 158, 155, 120, 172, 189, 177, 116, 190, 155, 156, 151, 101, 174, 120,
+        127, 121, 152, 164, 103, 155, 134, 174, 156, 152, 157, 168, 159, 186, 156, 133,
+        156, 130, 176, 188, 186, 186, 151, 204, 121, 148, 132, 173, 142, 162, 179, 144,
+        150, 135, 168, 153, 151, 173, 137, 190, 193, 180, 130, 203, 154, 145, 164, 159,
+        184, 176
     ];
 
     const input = document.getElementById('sifreKutusu');
@@ -248,6 +366,8 @@
     const durum = document.getElementById('durum');
     const lockIcon = document.getElementById('lockIcon');
     const denemeSayaci = document.getElementById('denemeSayaci');
+    const badge = document.querySelector('.badge');
+    const badgeDot = document.querySelector('.badge .dot');
 
     let yanlisDeneme = 0;
     let kilitli = false;
@@ -297,6 +417,8 @@
             durum.className = "";
             durum.innerText = "Anahtar bekleniyor...";
             lockIcon.classList.remove("unlocked");
+            badge.lastChild.textContent = "Şifreli Bağlantı";
+            badgeDot.style.background = "";
             return;
         }
 
@@ -310,6 +432,8 @@
                 durum.className = "ok";
                 durum.innerText = "Erişim sağlandı ✓";
                 lockIcon.classList.add("unlocked");
+                badge.lastChild.textContent = "Erişim Açık";
+                badgeDot.style.background = "var(--success)";
                 yanlisDeneme = 0;
                 denemeSayaci.innerText = "";
             } else {
@@ -317,12 +441,16 @@
                 lockIcon.classList.remove("unlocked");
                 durum.className = "err";
                 durum.innerText = "Hatalı anahtar.";
+                badge.lastChild.textContent = "Şifreli Bağlantı";
+                badgeDot.style.background = "";
             }
         } catch(e){
             btn.style.display = "none";
             lockIcon.classList.remove("unlocked");
             durum.className = "err";
             durum.innerText = "Hatalı anahtar.";
+            badge.lastChild.textContent = "Şifreli Bağlantı";
+            badgeDot.style.background = "";
         }
     }
 
